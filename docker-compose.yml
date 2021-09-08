@@ -1,0 +1,19 @@
+version: "3.7"
+services:
+    redis:
+        image: redis:6.2.5
+        ports:
+            - 6379:6379
+        networks:
+            - back
+    api:
+        build:
+            context: .
+            dockerfile: Cluster.API/dockerfile
+        ports:
+            - 5000:80
+        networks:
+            - back
+networks:
+    back:
+        driver: bridge

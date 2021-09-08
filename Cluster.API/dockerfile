@@ -1,0 +1,17 @@
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1-alpine AS build
+WORKDIR /app
+COPY ./Cluster.API/*.csproj ./Cluster.API/
+WORKDIR /app/Cluster.API/
+RUN dotnet restore
+
+RUN mkdir /usr/share/dotnet/sdk/NuGetFallbackFolder
+WORKDIR /app
+COPY ./Cluster.API/ ./Cluster.API/
+WORKDIR /app/Cluster.API/
+RUN dotnet publish -c Release -o out
+
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.3-alpine3.11 AS base
+EXPOSE 80
+WORKDIR /app
+COPY --from=build /app/Cluster.API/out .
+ENTRYPOINT ["dotnet", "Cluster.API.dll"]
