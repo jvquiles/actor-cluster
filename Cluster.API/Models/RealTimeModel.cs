@@ -7,10 +7,10 @@ namespace Cluster.API.Models
         public string Key { get; }
         public long Counter { get; }
 
-        public RealTimeModel(string key, RealTime realTime)
+        public RealTimeModel(string key, long counter)
         {
             this.Key = key;
-            this.Counter = realTime?.Counter ?? 0;
+            this.Counter = counter;
         }
     }
 }

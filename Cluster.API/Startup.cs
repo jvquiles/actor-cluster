@@ -1,3 +1,7 @@
+using Akka.Actor;
+using Akka.DI.Core;
+using Akka.DI.Extensions.DependencyInjection;
+using Cluster.API.Actors.RealTime;
 using Cluster.API.Persistence;
 using Cluster.API.Persistence.Redis;
 using Microsoft.AspNetCore.Builder;
@@ -24,6 +28,7 @@ namespace Cluster.API
         {
             services.AddControllers();
             
+            // Cache
             ConfigurationOptions configurationOptions = new ConfigurationOptions
             {
                 EndPoints = { "redis" }                
@@ -31,6 +36,18 @@ namespace Cluster.API
             ConnectionMultiplexer connectionMultiplexer = ConnectionMultiplexer.Connect(configurationOptions);
             services.AddSingleton<IConnectionMultiplexer>(connectionMultiplexer);
             services.TryAdd(ServiceDescriptor.Scoped(typeof(ICache<>), typeof(CacheRedis<>)));
+
+            // Actors
+            services.AddSingleton<ActorSystem>(serviceProvider => 
+            {
+                ActorSystem actorSystem = ActorSystem.Create("actorSystem")
+                    .UseServiceProvider(serviceProvider);
+
+                var actor = actorSystem.ActorOf(actorSystem.DI().Props<RealTimeActor>(), "realtime");                    
+
+                return actorSystem;
+            });
+            services.AddSingleton<RealTimeActor>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
