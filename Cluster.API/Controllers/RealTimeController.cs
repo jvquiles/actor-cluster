@@ -2,8 +2,8 @@
 using System.Threading.Tasks;
 using Akka.Actor;
 using Cluster.API.Models;
-using Cluster.API.Persistence;
-using Cluster.API.Persistence.Entities;
+using Cluster.Persistence;
+using Cluster.Persistence.Entities;
 using Cluster.Messages.RealTime;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;

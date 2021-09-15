@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cluster.Remote", "Cluster.R
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cluster.Messages", "Cluster.Messages\Cluster.Messages.csproj", "{679F4B84-35FA-4EDB-84B7-52388F66D014}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cluster.Persistence", "Cluster.Persistence\Cluster.Persistence.csproj", "{94F551EE-03D6-4487-A782-E4035C10BB82}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,5 +60,17 @@ Global
 		{679F4B84-35FA-4EDB-84B7-52388F66D014}.Release|x64.Build.0 = Release|Any CPU
 		{679F4B84-35FA-4EDB-84B7-52388F66D014}.Release|x86.ActiveCfg = Release|Any CPU
 		{679F4B84-35FA-4EDB-84B7-52388F66D014}.Release|x86.Build.0 = Release|Any CPU
+		{94F551EE-03D6-4487-A782-E4035C10BB82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94F551EE-03D6-4487-A782-E4035C10BB82}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94F551EE-03D6-4487-A782-E4035C10BB82}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{94F551EE-03D6-4487-A782-E4035C10BB82}.Debug|x64.Build.0 = Debug|Any CPU
+		{94F551EE-03D6-4487-A782-E4035C10BB82}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{94F551EE-03D6-4487-A782-E4035C10BB82}.Debug|x86.Build.0 = Debug|Any CPU
+		{94F551EE-03D6-4487-A782-E4035C10BB82}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94F551EE-03D6-4487-A782-E4035C10BB82}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94F551EE-03D6-4487-A782-E4035C10BB82}.Release|x64.ActiveCfg = Release|Any CPU
+		{94F551EE-03D6-4487-A782-E4035C10BB82}.Release|x64.Build.0 = Release|Any CPU
+		{94F551EE-03D6-4487-A782-E4035C10BB82}.Release|x86.ActiveCfg = Release|Any CPU
+		{94F551EE-03D6-4487-A782-E4035C10BB82}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

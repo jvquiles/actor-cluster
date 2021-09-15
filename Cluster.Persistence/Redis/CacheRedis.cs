@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
 using StackExchange.Redis;
 
-namespace Cluster.Remote.Persistence.Redis
+namespace Cluster.Persistence.Redis
 {
     public class CacheRedis<T> : ICache<T>
         where T : class

@@ -1,6 +1,6 @@
 using Akka.Actor;
 using Cluster.Messages.RealTime;
-using Cluster.Remote.Persistence;
+using Cluster.Persistence;
 
 namespace Cluster.Remote.Actors.RealTime
 {   

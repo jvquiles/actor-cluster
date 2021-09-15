@@ -9,9 +9,9 @@
     <PackageReference Include="Akka.DI.Core" Version="1.4.25" />
     <PackageReference Include="Akka.DI.Extensions.DependencyInjection" Version="1.4.22" />
     <PackageReference Include="Akka.Remote" Version="1.4.25" />
-    <PackageReference Include="StackExchange.Redis" Version="2.2.62" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Cluster.Messages\Cluster.Messages.csproj" />
+    <ProjectReference Include="..\Cluster.Persistence\Cluster.Persistence.csproj" />
   </ItemGroup>
 </Project>

@@ -1,8 +1,8 @@
 using Akka.Actor;
 using Akka.Configuration;
 using Akka.DI.Extensions.DependencyInjection;
-using Cluster.API.Persistence;
-using Cluster.API.Persistence.Redis;
+using Cluster.Persistence;
+using Cluster.Persistence.Redis;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
