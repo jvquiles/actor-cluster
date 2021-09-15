@@ -28,7 +28,6 @@ namespace Cluster.API
             services.AddControllers();
             
             // Cache
-            /*
             ConfigurationOptions configurationOptions = new ConfigurationOptions
             {
                 EndPoints = { "redis" }                
@@ -36,7 +35,6 @@ namespace Cluster.API
             ConnectionMultiplexer connectionMultiplexer = ConnectionMultiplexer.Connect(configurationOptions);
             services.AddSingleton<IConnectionMultiplexer>(connectionMultiplexer); 
             services.TryAdd(ServiceDescriptor.Scoped(typeof(ICache<>), typeof(CacheRedis<>)));
-            */
             
             // Actors
             Config actorSystemConfiguration = ConfigurationFactory.ParseString(@"
@@ -46,8 +44,8 @@ namespace Cluster.API
                 }
                 remote {
                     dot-netty-tcp {
-                        port = 0
-                        hostname = localhost
+                        port = 5002
+                        hostname = api
                     }
                 }
             }");

@@ -1,6 +1,6 @@
 using Akka.Actor;
-using Cluster.Remote.Persistence;
 using Cluster.Messages.RealTime;
+using Cluster.Remote.Persistence;
 
 namespace Cluster.Remote.Actors.RealTime
 {   
@@ -8,12 +8,11 @@ namespace Cluster.Remote.Actors.RealTime
     {
         private ICache<Persistence.Entities.RealTime> cache;
 
-        public RealTimeActor(/*ICache<Persistence.Entities.RealTime> cache*/)
+        public RealTimeActor(ICache<Persistence.Entities.RealTime> cache)
         {
-            //this.cache = cache;
+            this.cache = cache;
             this.Receive<IncrementRequest>(request => 
-            {
-                /*
+            {                
                 Persistence.Entities.RealTime realTime = this.cache.Get(request.Key) ?? new Persistence.Entities.RealTime();
                 realTime.Counter++;
                 this.cache.Set(request.Key, realTime);
@@ -21,7 +20,6 @@ namespace Cluster.Remote.Actors.RealTime
                 {
                      Counter = realTime.Counter 
                 });
-                */
                 Sender.Tell(new IncrementResponse());
             });
         }

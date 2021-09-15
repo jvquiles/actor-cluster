@@ -25,14 +25,12 @@ namespace Cluster.Remote
                     services.AddHostedService<Worker>();
             
                     // Cache
-                    /*
                     ConfigurationOptions configurationOptions = new ConfigurationOptions
                     {
                         EndPoints = { "redis" }                
                     };
                     ConnectionMultiplexer connectionMultiplexer = ConnectionMultiplexer.Connect(configurationOptions);
                     services.AddSingleton<IConnectionMultiplexer>(connectionMultiplexer);
-                    */
                     services.TryAdd(ServiceDescriptor.Scoped(typeof(ICache<>), typeof(CacheRedis<>)));
                     
                     // Actors
@@ -44,8 +42,8 @@ namespace Cluster.Remote
                         remote {
                             dot-netty.tcp {
                                 port = 5001
-                                hostname = 0.0.0.0
-                                public-hostname = localhost
+                                hostname = remote
+                                public-hostname = remote
                             }
                         }
                     }");

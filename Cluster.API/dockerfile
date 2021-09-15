@@ -1,5 +1,4 @@
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-alpine AS build
-RUN mkdir /usr/share/dotnet/sdk/NuGetFallbackFolder
 WORKDIR /app
 COPY ./Cluster.API/*.csproj ./Cluster.API/
 COPY ./Cluster.Messages/*.csproj ./Cluster.Messages/
@@ -7,7 +6,9 @@ WORKDIR /app/Cluster.API/
 RUN dotnet restore
 
 WORKDIR /app
+RUN mkdir /usr/share/dotnet/sdk/NuGetFallbackFolder
 COPY ./Cluster.API/ ./Cluster.API/
+COPY ./Cluster.Messages/ ./Cluster.Messages/
 WORKDIR /app/Cluster.API/
 RUN dotnet publish -c Release -o out
 

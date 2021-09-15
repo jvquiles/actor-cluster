@@ -25,7 +25,7 @@ namespace Cluster.Remote
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            actorSystem.ActorOf(actorSystem.DI().Props<RealTimeActor>(), "realtime");                    
+            this.actorSystem.ActorOf(actorSystem.DI().Props<RealTimeActor>(), "realtime");                    
             await Task.CompletedTask;
         }
     }

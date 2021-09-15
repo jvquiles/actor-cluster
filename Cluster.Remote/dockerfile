@@ -1,5 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1-alpine AS buildks
-RUN mkdir /usr/share/dotnet/sdk/NuGetFallbackFolder
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1-alpine AS build
 WORKDIR /app
 COPY ./Cluster.Remote/*.csproj ./Cluster.Remote/
 COPY ./Cluster.Messages/*.csproj ./Cluster.Messages/
@@ -7,7 +6,9 @@ WORKDIR /app/Cluster.Remote/
 RUN dotnet restore
 
 WORKDIR /app
+RUN mkdir /usr/share/dotnet/sdk/NuGetFallbackFolder
 COPY ./Cluster.Remote/ ./Cluster.Remote/
+COPY ./Cluster.Messages/ ./Cluster.Messages/
 WORKDIR /app/Cluster.Remote/
 RUN dotnet publish -c Release -o out
 

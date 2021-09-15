@@ -15,13 +15,13 @@ namespace Cluster.API.Controllers
     public class RealTimeController : ControllerBase
     {
         private ILogger<RealTimeController> logger;
-        //private ICache<RealTime> cache;
+        private ICache<RealTime> cache;
         private ActorSystem actorSystem;
 
-        public RealTimeController(ILogger<RealTimeController> logger, /*ICache<RealTime> cache,*/ ActorSystem actorSystem)
+        public RealTimeController(ILogger<RealTimeController> logger, ICache<RealTime> cache, ActorSystem actorSystem)
         {
             this.logger = logger;
-            //this.cache = cache;
+            this.cache = cache;
             this.actorSystem = actorSystem;
         }
 
@@ -30,13 +30,9 @@ namespace Cluster.API.Controllers
         {
             try
             {
-                /*
                 RealTime realTime = this.cache.Get(key);
                 RealTimeModel realTimeModel = new RealTimeModel(key, realTime.Counter);
                 return Ok(realTimeModel);
-                */
-
-                return Ok();
             }
             catch(Exception ex)
             {
@@ -49,7 +45,7 @@ namespace Cluster.API.Controllers
         {
             try
             {
-                ActorSelection actorSelection = actorSystem.ActorSelection("akka.tcp://remoteActor@localhost:5001/user/realtime");
+                ActorSelection actorSelection = actorSystem.ActorSelection("akka.tcp://remoteActor@remote:5001/user/realtime");
                 IncrementResponse incrementResponse = await actorSelection.Ask<IncrementResponse>(new IncrementRequest(key));
                 return Ok(new RealTimeModel(key, incrementResponse.Counter));
             }
