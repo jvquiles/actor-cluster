@@ -1,16 +1,16 @@
 using Newtonsoft.Json;
 using StackExchange.Redis;
 
-namespace Cluster.API.Persistence.Redis
+namespace Cluster.Remote.Persistence.Redis
 {
     public class CacheRedis<T> : ICache<T>
-        where T: class
+        where T : class
     {
         private IDatabase database;
 
-        public CacheRedis(IConnectionMultiplexer connectionMultiplexer)
+        public CacheRedis(/*IConnectionMultiplexer connectionMultiplexer*/)
         {
-            this.database = connectionMultiplexer.GetDatabase();
+            //this.database = connectionMultiplexer.GetDatabase();
         }
 
         public T Get(string key)

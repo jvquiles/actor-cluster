@@ -1,0 +1,18 @@
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1-alpine AS buildks
+RUN mkdir /usr/share/dotnet/sdk/NuGetFallbackFolder
+WORKDIR /app
+COPY ./Cluster.Remote/*.csproj ./Cluster.Remote/
+COPY ./Cluster.Messages/*.csproj ./Cluster.Messages/
+WORKDIR /app/Cluster.Remote/
+RUN dotnet restore
+
+WORKDIR /app
+COPY ./Cluster.Remote/ ./Cluster.Remote/
+WORKDIR /app/Cluster.Remote/
+RUN dotnet publish -c Release -o out
+
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.3-alpine3.11 AS base
+EXPOSE 80
+WORKDIR /app
+COPY --from=build /app/Cluster.Remote/out .
+ENTRYPOINT ["dotnet", "Cluster.Remote.dll"]

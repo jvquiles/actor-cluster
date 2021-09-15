@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Threading.Tasks;
+using Akka.Actor;
 using Cluster.API.Models;
 using Cluster.API.Persistence;
 using Cluster.API.Persistence.Entities;
+using Cluster.Messages.RealTime;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -12,12 +15,14 @@ namespace Cluster.API.Controllers
     public class RealTimeController : ControllerBase
     {
         private ILogger<RealTimeController> logger;
-        private ICache<RealTime> cache;
+        //private ICache<RealTime> cache;
+        private ActorSystem actorSystem;
 
-        public RealTimeController(ILogger<RealTimeController> logger, ICache<RealTime> cache)
+        public RealTimeController(ILogger<RealTimeController> logger, /*ICache<RealTime> cache,*/ ActorSystem actorSystem)
         {
             this.logger = logger;
-            this.cache = cache;
+            //this.cache = cache;
+            this.actorSystem = actorSystem;
         }
 
         [HttpGet("/{key}")]
@@ -25,25 +30,28 @@ namespace Cluster.API.Controllers
         {
             try
             {
+                /*
                 RealTime realTime = this.cache.Get(key);
-                RealTimeModel realTimeModel = new RealTimeModel(key, realTime);
+                RealTimeModel realTimeModel = new RealTimeModel(key, realTime.Counter);
                 return Ok(realTimeModel);
+                */
+
+                return Ok();
             }
             catch(Exception ex)
             {
                 return BadRequest($"{ex}");
-            }   
+            }
         }
 
         [HttpPut("/{key}")]
-        public IActionResult Set(string key)
+        public async Task<IActionResult> Set(string key)
         {
             try
             {
-                RealTime realTime = this.cache.Get(key) ?? new RealTime();
-                realTime.Counter++;
-                this.cache.Set(key, realTime);
-                return Ok(realTime.Counter);
+                ActorSelection actorSelection = actorSystem.ActorSelection("akka.tcp://remoteActor@localhost:5001/user/realtime");
+                IncrementResponse incrementResponse = await actorSelection.Ask<IncrementResponse>(new IncrementRequest(key));
+                return Ok(new RealTimeModel(key, incrementResponse.Counter));
             }
             catch(Exception ex)
             {
