@@ -1,4 +1,4 @@
-namespace Cluster.API.Persistence.Entities
+namespace Cluster.Persistence.Entities
 {
     public class RealTime
     {

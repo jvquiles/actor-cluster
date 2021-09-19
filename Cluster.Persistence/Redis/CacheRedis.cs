@@ -1,11 +1,10 @@
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using StackExchange.Redis;
 
-namespace Cluster.API.Persistence.Redis
+namespace Cluster.Persistence.Redis
 {
     public class CacheRedis<T> : ICache<T>
-        where T: class
+        where T : class
     {
         private IDatabase database;
 

@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Threading.Tasks;
+using Akka.Actor;
 using Cluster.API.Models;
-using Cluster.API.Persistence;
-using Cluster.API.Persistence.Entities;
+using Cluster.Messages.RealTime;
+using Cluster.Persistence;
+using Cluster.Persistence.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -13,11 +16,13 @@ namespace Cluster.API.Controllers
     {
         private ILogger<RealTimeController> logger;
         private ICache<RealTime> cache;
+        private IActorRef realTimeShard;
 
-        public RealTimeController(ILogger<RealTimeController> logger, ICache<RealTime> cache)
+        public RealTimeController(ILogger<RealTimeController> logger, ICache<RealTime> cache, IActorRef realTimeShard)
         {
             this.logger = logger;
             this.cache = cache;
+            this.realTimeShard = realTimeShard;
         }
 
         [HttpGet("/{key}")]
@@ -26,7 +31,7 @@ namespace Cluster.API.Controllers
             try
             {
                 RealTime realTime = this.cache.Get(key);
-                RealTimeModel realTimeModel = new RealTimeModel(key, realTime);
+                RealTimeModel realTimeModel = new RealTimeModel(key, realTime?.Counter ?? 0);
                 return Ok(realTimeModel);
             }
             catch(Exception ex)
@@ -36,14 +41,12 @@ namespace Cluster.API.Controllers
         }
 
         [HttpPut("/{key}")]
-        public IActionResult Set(string key)
+        public async Task<IActionResult> Set(string key)
         {
             try
             {
-                RealTime realTime = this.cache.Get(key) ?? new RealTime();
-                realTime.Counter++;
-                this.cache.Set(key, realTime);
-                return Ok(realTime.Counter);
+                IncrementResponse incrementResponse = await realTimeShard.Ask<IncrementResponse>(new IncrementRequest() { Key = key });
+                return Ok(incrementResponse);
             }
             catch(Exception ex)
             {

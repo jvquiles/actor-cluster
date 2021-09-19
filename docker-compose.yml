@@ -12,6 +12,29 @@ services:
             dockerfile: Cluster.API/dockerfile
         ports:
             - 5000:80
+            - 5002:5002
+        networks:
+            - back
+    realtime:
+        build:
+            context: .
+            dockerfile: Cluster.RealTime/dockerfile
+        ports:
+            - 5001:5001
+        environment:
+            AKKA_PORT: 5001
+            AKKA_NAME: realtime
+        networks:
+            - back
+    realtime2:
+        build:
+            context: .
+            dockerfile: Cluster.RealTime/dockerfile
+        ports:
+            - 5003:5003
+        environment:
+            AKKA_PORT: 5003
+            AKKA_NAME: realtime2
         networks:
             - back
 networks:

@@ -1,17 +1,19 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Worker">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>dotnet-Cluster.RealTime-7A846971-9135-4260-B25F-1C7F358C1099</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Cluster.Messages\Cluster.Messages.csproj"/>
-    <ProjectReference Include="..\Cluster.Persistence\Cluster.Persistence.csproj"/>
-  </ItemGroup>
-  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.2"/>
     <PackageReference Include="Akka" Version="1.4.25"/>
     <PackageReference Include="Akka.Configuration" Version="1.0.5835.36887"/>
     <PackageReference Include="Akka.Cluster" Version="1.4.25"/>
     <PackageReference Include="Akka.DI.Core" Version="1.4.25"/>
     <PackageReference Include="Akka.DI.Extensions.DependencyInjection" Version="1.4.22"/>
     <PackageReference Include="Akka.Cluster.Sharding" Version="1.4.25"/>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Cluster.Messages\Cluster.Messages.csproj"/>
+    <ProjectReference Include="..\Cluster.Persistence\Cluster.Persistence.csproj"/>
   </ItemGroup>
 </Project>
