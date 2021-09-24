@@ -1,0 +1,31 @@
+.column
+{
+    width: 10em;
+}
+
+.thinline
+{
+    height: 5px !important;
+}
+
+.thickline
+{
+    height: 100px !important;
+}
+
+.flex-row
+{
+    display: flex;
+    flex-direction: row;
+}
+
+.full-row-reverse
+{
+    width: 100%;
+    flex-direction: row-reverse;
+}
+
+.cell
+{
+    margin-left: 1em;
+}

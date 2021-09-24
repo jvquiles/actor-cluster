@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Cluster.API.Persistence
 {
     public interface ICache<T>
@@ -5,5 +7,7 @@ namespace Cluster.API.Persistence
     {
         T Get(string key);
         void Set(string key, T record);
+        IEnumerable<string> GetKeys();
+        void Clear();
     }
 }

@@ -22,6 +22,16 @@ namespace Cluster.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options => 
+                options.AddPolicy("allowFront", builder => 
+                {
+                    builder.WithOrigins("http://localhost:4200");
+                    builder.AllowAnyMethod();
+                    builder.AllowAnyHeader();
+                    builder.AllowCredentials();
+                })
+            );
+
             services.AddControllers();
             
             ConfigurationOptions configurationOptions = new ConfigurationOptions
@@ -41,7 +51,7 @@ namespace Cluster.API
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            app.UseCors("allowFront");
 
             app.UseRouting();
 
