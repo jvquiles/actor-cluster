@@ -1,3 +1,4 @@
+using Cluster.API.Hubs;
 using Cluster.API.Persistence;
 using Cluster.API.Persistence.Redis;
 using Microsoft.AspNetCore.Builder;
@@ -41,6 +42,9 @@ namespace Cluster.API
             ConnectionMultiplexer connectionMultiplexer = ConnectionMultiplexer.Connect(configurationOptions);
             services.AddSingleton<IConnectionMultiplexer>(connectionMultiplexer);
             services.TryAdd(ServiceDescriptor.Scoped(typeof(ICache<>), typeof(CacheRedis<>)));
+            
+            services.AddSignalR();
+            services.AddScoped<CounterHub>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,6 +64,7 @@ namespace Cluster.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<CounterHub>("/counterhub");
             });
         }
     }

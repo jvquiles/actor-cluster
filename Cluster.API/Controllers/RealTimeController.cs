@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Cluster.API.Hubs;
 using Cluster.API.Models;
 using Cluster.API.Persistence;
 using Cluster.API.Persistence.Entities;
@@ -15,11 +16,13 @@ namespace Cluster.API.Controllers
     {
         private ILogger<RealTimeController> logger;
         private ICache<RealTime> cache;
+        private CounterHub counterHub;
 
-        public RealTimeController(ILogger<RealTimeController> logger, ICache<RealTime> cache)
+        public RealTimeController(ILogger<RealTimeController> logger, ICache<RealTime> cache, CounterHub counterHub)
         {
             this.logger = logger;
             this.cache = cache;
+            this.counterHub = counterHub;
         }
 
         [HttpGet]
@@ -60,6 +63,7 @@ namespace Cluster.API.Controllers
                 // await Task.Delay(TimeSpan.FromSeconds(1));
                 realTime.Counter++;
                 this.cache.Set(key, realTime);
+                await this.counterHub.UpdateCounter(key, realTime.Counter);
                 RealTimeModel realTimeModel = new RealTimeModel(key, realTime.Counter);
                 return Ok(realTimeModel);
             }

@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { HubConnectionBuilder } from "@microsoft/signalr";
 
 type counter = 
 {
@@ -48,6 +49,22 @@ export class ListComponent implements OnInit {
             });
         });
       });
+
+    const connection = new HubConnectionBuilder()
+    .withUrl("http://localhost:5000/counterhub")
+    .build();
+
+    connection.on("UpdateCounter", (key: string, count: number) =>
+    {
+      let row = this.counters.find(x => x.key == key);
+      if (row != undefined)
+      {
+        row.counter = row.counter = count;
+      }
+    });
+    
+    connection.start().then(() => {})
+    .catch(err => console.error(err));
   }
 
   add(key: string)
@@ -74,12 +91,12 @@ export class ListComponent implements OnInit {
     let row = this.counters.find(x => x.key == key);
     if (row != undefined)
     {
-      let innerRow = row;
+      //let innerRow = row;
       row.localcounter++;
       this.http.put<postResponse>("http://localhost:5000/realtime/" + key, {})
         .subscribe(response => 
           {
-            innerRow.counter = response.counter;
+            //innerRow.counter = response.counter;
           });
     }
   }
