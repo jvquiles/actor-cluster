@@ -1,7 +1,6 @@
 ﻿using System;
 using Akka.Actor;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Cluster.API.Hubs;
 using Cluster.API.Models;
 using Cluster.API.Persistence;
@@ -59,15 +58,13 @@ namespace Cluster.API.Controllers
         }
 
         [HttpPut("{key}")]
-        public async Task<IActionResult> Set(string key)
+        public IActionResult Set(string key)
         {
             try
             {
                 ActorSelection actorSelection = actorSystem.ActorSelection("/user/realtime");
-                IncrementResponse incrementResponse = await actorSelection.Ask<IncrementResponse>(new IncrementRequest(key));
-                await this.counterHub.UpdateCounter(key, incrementResponse.Counter);
-                RealTimeModel realTimeModel = new RealTimeModel(key, incrementResponse.Counter);
-                return Ok(realTimeModel);
+                actorSelection.Tell(new IncrementRequest(key));
+                return Ok();
             }
             catch(Exception ex)
             {
@@ -81,6 +78,7 @@ namespace Cluster.API.Controllers
             try
             {
                 this.cache.Clear();
+                this.counterHub.ClearCounters();
                 return Ok();
             }
             catch(Exception ex)

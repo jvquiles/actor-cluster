@@ -7,12 +7,16 @@ type counter =
   key: string;
   counter: number;
   localcounter: number;
+  server: string;
+  actorId?: number;
 };
 
-type postResponse =
+type incrementResponse = 
 {
-  key: string;
-  counter: number;
+  Key: string;
+  Counter: number;
+  Server: string;
+  ActorId?: number;
 };
 
 type getResponse = 
@@ -45,22 +49,35 @@ export class ListComponent implements OnInit {
           this.http.get<getResponse>("http://localhost:5000/realtime/" + key)
             .subscribe(response => 
             {
-                this.counters.push({ key:key, counter:response.counter, localcounter:0 });
+                this.counters.push({ key:key, counter:response.counter, localcounter:0, server: "" });
             });
         });
       });
 
     const connection = new HubConnectionBuilder()
-    .withUrl("http://localhost:5000/counterhub")
-    .build();
+      .withUrl("http://localhost:5000/counterhub")
+      .build();
 
-    connection.on("UpdateCounter", (key: string, count: number) =>
+    connection.on("UpdateCounter", (key: string, count: number, incrementResponseText: string) =>
     {
-      let row = this.counters.find(x => x.key == key);
+      let incrementResponse: incrementResponse = JSON.parse(incrementResponseText);
+      let row = this.counters.find(x => x.key == incrementResponse.Key);
       if (row != undefined)
       {
-        row.counter = row.counter = count;
+        row.counter = incrementResponse.Counter;
+        row.server = incrementResponse.Server;
+        row.actorId = incrementResponse.ActorId;
       }
+      else
+      {
+        let row = { key: key, counter: incrementResponse.Counter, localcounter: 0, server: incrementResponse.Server, actorId: incrementResponse.ActorId };
+        this.counters.push(row);
+      }
+    });
+
+    connection.on("ClearCounters", () => 
+    {
+      this.counters = [];
     });
     
     connection.start().then(() => {})
@@ -73,13 +90,11 @@ export class ListComponent implements OnInit {
     let row = this.counters.find(x => x.key == key);
     if (row == undefined)
     {
-      let row = { key: key, counter: 0, localcounter: 1 };
+      let row = { key: key, counter: 0, localcounter: 1, server: "" };
       this.counters.push(row);
-      this.http.put<postResponse>("http://localhost:5000/realtime/" + key, {})
+      this.http.put("http://localhost:5000/realtime/" + key, {})
         .subscribe(response => 
-          {
-            row.counter = response.counter;
-          });
+        {});
     }
 
     this.key = "";
@@ -91,13 +106,10 @@ export class ListComponent implements OnInit {
     let row = this.counters.find(x => x.key == key);
     if (row != undefined)
     {
-      //let innerRow = row;
       row.localcounter++;
-      this.http.put<postResponse>("http://localhost:5000/realtime/" + key, {})
+      this.http.put("http://localhost:5000/realtime/" + key, {})
         .subscribe(response => 
-          {
-            //innerRow.counter = response.counter;
-          });
+        {});
     }
   }
 
@@ -105,8 +117,6 @@ export class ListComponent implements OnInit {
   {
     this.http.post("http://localhost:5000/realtime/clear", {})
       .subscribe(() => 
-      {
-        this.counters = [];
-      });
+      {});
   }
 }
