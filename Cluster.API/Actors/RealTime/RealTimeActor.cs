@@ -1,3 +1,5 @@
+using System;
+using System.Threading.Tasks;
 using Akka.Actor;
 using Cluster.API.Persistence;
 
@@ -13,6 +15,7 @@ namespace Cluster.API.Actors.RealTime
             {
                 Persistence.Entities.RealTime realTime = this.cache.Get(request.Key) ?? new Persistence.Entities.RealTime();
                 realTime.Counter++;
+                Task.Delay(TimeSpan.FromSeconds(1)).Wait();
                 this.cache.Set(request.Key, realTime);
                 Sender.Tell(new IncrementResponse()
                 {

@@ -1,0 +1,48 @@
+<mat-list>
+    <mat-list-item>
+        <div class="column">
+            Key
+        </div>
+        <div class="column">
+            Server counter
+        </div>
+        <div class="column">
+            Local counter
+        </div>
+        <div>            
+        </div>
+    </mat-list-item>
+    <mat-list-item class="thinline">
+        <mat-divider></mat-divider>
+    </mat-list-item>
+    <mat-list-item *ngFor="let counter of counters">
+        <div class="column">
+            {{counter.key}}
+        </div>
+        <div class="column">
+            {{counter.counter}}
+        </div>
+        <div class="column">
+            {{counter.localcounter}}
+        </div>
+        <div>
+            <button mat-mini-fab color="primary" (click)="plus(counter.key)">
+                <mat-icon>plus_one</mat-icon>
+            </button>
+        </div>
+    </mat-list-item>
+    <mat-list-item class="thickline">
+        <div>
+            <mat-form-field class="example-full-width">
+                <mat-label>New key</mat-label>
+                <input matInput placeholder="ex. car" [(ngModel)]="key">
+            </mat-form-field>
+        </div>
+        <div class="cell">
+            <button mat-raised-button color="accent" [disabled]="key === ''" (click)="add(key)">Add</button>
+        </div>
+        <div class="cell flex-row full-row-reverse">
+            <button mat-raised-button color="basic" (click)="clear()">Clear</button>
+        </div>
+    </mat-list-item>
+</mat-list>

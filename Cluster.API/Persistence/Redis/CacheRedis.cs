@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using StackExchange.Redis;
@@ -8,10 +10,21 @@ namespace Cluster.API.Persistence.Redis
         where T: class
     {
         private IDatabase database;
+        private IEnumerable<IServer> servers;
 
         public CacheRedis(IConnectionMultiplexer connectionMultiplexer)
         {
             this.database = connectionMultiplexer.GetDatabase();
+            this.servers = connectionMultiplexer.GetEndPoints()
+                .Select(x => connectionMultiplexer.GetServer(x));
+        }
+
+        public void Clear()
+        {
+            foreach(RedisKey redisKey in this.GetKeys())
+            {
+                this.database.KeyDelete(redisKey);
+            }
         }
 
         public T Get(string key)
@@ -24,6 +37,12 @@ namespace Cluster.API.Persistence.Redis
             
             T record = JsonConvert.DeserializeObject<T>(value);
             return record;
+        }
+
+        public IEnumerable<string> GetKeys()
+        {
+            return this.servers.SelectMany(x => x.Keys())
+                .Select(x => x.ToString());
         }
 
         public void Set(string key, T record)
