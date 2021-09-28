@@ -3,13 +3,15 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="Akka" Version="1.4.25" />
-    <PackageReference Include="Akka.Remote" Version="1.4.25" />
-    <PackageReference Include="Akka.DI.Extensions.DependencyInjection" Version="1.4.22" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1"/>
+    <PackageReference Include="Akka" Version="1.4.25"/>
+    <PackageReference Include="Akka.Remote" Version="1.4.25"/>
+    <PackageReference Include="Akka.DI.Extensions.DependencyInjection" Version="1.4.22"/>
+    <PackageReference Include="StackExchange.Redis" Version="2.2.62"/>
+    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0"/>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Cluster.Messages\Cluster.Messages.csproj" />
-    <ProjectReference Include="..\Cluster.Persistence\Cluster.Persistence.csproj" />
+    <ProjectReference Include="..\Cluster.Messages\Cluster.Messages.csproj"/>
+    <ProjectReference Include="..\Cluster.Persistence\Cluster.Persistence.csproj"/>
   </ItemGroup>
 </Project>

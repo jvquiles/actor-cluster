@@ -14,18 +14,18 @@ namespace Cluster.Remote
 {
     public class Worker : BackgroundService
     {
-        private readonly ILogger<Worker> _logger;
+        private readonly ILogger<Worker> logger;
         private readonly ActorSystem actorSystem;
 
         public Worker(ILogger<Worker> logger, ActorSystem actorSystem)
         {
-            _logger = logger;
+            this.logger = logger;
             this.actorSystem = actorSystem;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            this.actorSystem.ActorOf(actorSystem.DI().Props<RealTimeActor>(), "realtime");                    
+            this.actorSystem.ActorOf(actorSystem.DI().Props<RealTimeActor>(), "realtime");
             await Task.CompletedTask;
         }
     }
