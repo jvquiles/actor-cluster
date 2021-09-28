@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Threading;
 using Cluster.API.Hubs;
 using Cluster.API.Models;
 using Cluster.API.Persistence;
@@ -55,17 +55,16 @@ namespace Cluster.API.Controllers
         }
 
         [HttpPut("{key}")]
-        public async Task<IActionResult> Set(string key)
+        public IActionResult Set(string key)
         {
             try
             {
                 RealTime realTime = this.cache.Get(key) ?? new RealTime();
-                // await Task.Delay(TimeSpan.FromSeconds(1));
+                // Thread.Sleep(TimeSpan.FromSeconds(1));
                 realTime.Counter++;
                 this.cache.Set(key, realTime);
-                await this.counterHub.UpdateCounter(key, realTime.Counter);
-                RealTimeModel realTimeModel = new RealTimeModel(key, realTime.Counter);
-                return Ok(realTimeModel);
+                this.counterHub.UpdateCounter(new IncrementResponse() { Key = key, Counter = realTime.Counter, Server = Environment.GetEnvironmentVariable("SERVER") });
+                return Ok();
             }
             catch(Exception ex)
             {
@@ -79,6 +78,7 @@ namespace Cluster.API.Controllers
             try
             {
                 this.cache.Clear();
+                this.counterHub.ClearCounters();
                 return Ok();
             }
             catch(Exception ex)

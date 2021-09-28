@@ -1,9 +1,9 @@
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
+using Newtonsoft.Json;
 
 namespace Cluster.API.Hubs
 {
-    public class CounterHub : Hub<ICounterHub>, ICounterHub
+    public class CounterHub : Hub<ICounterHub>
     {
         private IHubContext<CounterHub, ICounterHub> counterHub;
 
@@ -12,10 +12,15 @@ namespace Cluster.API.Hubs
             this.counterHub = counterHub;
         }
         
-        public Task UpdateCounter(string key, long count)
+        public void UpdateCounter(IncrementResponse incrementResponse)
         {
-            this.counterHub.Clients.All.UpdateCounter(key, count);
-            return Task.CompletedTask;
+            string incrementResponseText = JsonConvert.SerializeObject(incrementResponse);
+            this.counterHub.Clients.All.UpdateCounter(incrementResponse.Key, incrementResponse.Counter, incrementResponseText);
+        }
+
+        public void ClearCounters()
+        {
+            this.counterHub.Clients.All.ClearCounters();
         }
     }
 }
