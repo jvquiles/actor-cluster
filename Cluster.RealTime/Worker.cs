@@ -1,9 +1,7 @@
 using Akka.Actor;
-using Akka.DI.Core;
-using Akka.DI.Extensions.DependencyInjection;
+using Cluster.Messages.RealTime;
 using Cluster.RealTime.Actors;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,13 +12,13 @@ namespace Cluster.RealTime
 {
     public class Worker : BackgroundService
     {
-        private readonly ILogger<Worker> _logger;
-        private readonly IActorRef actorRef;
+        private readonly ILogger<Worker> logger;
+        private readonly IActorRef realTimeProxy;
 
-        public Worker(ILogger<Worker> logger, IActorRef actorRef)
+        public Worker(ILogger<Worker> logger, RealTimeProxy realTimeProxy)
         {
-            _logger = logger;
-            this.actorRef = actorRef;
+            this.logger = logger;
+            this.realTimeProxy = realTimeProxy.ActorRef;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)

@@ -13,7 +13,18 @@ namespace Cluster.Messages.RealTime
             return message switch
             {
                 IncrementRequest incrementRequest => incrementRequest.Key,
+                ClearRequest clearRequest => clearRequest.Key,
                 _ => ""
+            };
+        }
+
+        public override string ShardId(object message)
+        {
+            return message switch
+            {
+                IncrementRequest incrementRequest => incrementRequest.Key,
+                ClearRequest clearRequest => clearRequest.Key,
+                _ => "",
             };
         }
     }

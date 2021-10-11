@@ -1,5 +1,3 @@
-using Cluster.Persistence.Entities;
-
 namespace Cluster.API.Models
 {
     public class RealTimeModel

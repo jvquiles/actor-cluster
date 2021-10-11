@@ -1,21 +1,40 @@
 version: "3.7"
 services:
     redis:
+        container_name: redis
         image: redis:6.2.5
         ports:
             - 6379:6379
         networks:
             - back
     api:
+        container_name: api
         build:
             context: .
             dockerfile: Cluster.API/dockerfile
         ports:
             - 5000:80
             - 5002:5002
+        environment:
+            AKKA_PORT: 5002
+            AKKA_NAME: api
+        networks:
+            - back
+    api2:
+        container_name: api2
+        build:
+            context: .
+            dockerfile: Cluster.API/dockerfile
+        ports:
+            - 5005:80
+            - 5004:5004
+        environment:
+            AKKA_PORT: 5004
+            AKKA_NAME: api2
         networks:
             - back
     realtime:
+        container_name: realtime
         build:
             context: .
             dockerfile: Cluster.RealTime/dockerfile
@@ -27,6 +46,7 @@ services:
         networks:
             - back
     realtime2:
+        container_name: realtime2
         build:
             context: .
             dockerfile: Cluster.RealTime/dockerfile
@@ -37,6 +57,30 @@ services:
             AKKA_NAME: realtime2
         networks:
             - back
+    web:
+        container_name: web
+        build:
+            context: ./Cluster-Web
+            dockerfile: dockerfile
+            args:
+                - API_URL=http://localhost:5000
+        ports:
+            - 4200:80
+        networks:
+            - front
+    web2:
+        container_name: web2
+        build:
+            context: ./Cluster-Web
+            dockerfile: dockerfile
+            args:
+                - API_URL=http://localhost:5005
+        ports:
+            - 4201:80
+        networks:
+            - front
 networks:
     back:
+        driver: bridge
+    front:
         driver: bridge

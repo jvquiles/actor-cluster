@@ -53,17 +53,17 @@ akka {
     }
     cluster {
         seed-nodes = [""akka.tcp://system@realtime:5001""]
+        roles = [""realtime""]
     }
 }");
                     services.AddSingleton((serviceProvider) => ActorSystem
                         .Create("system", config)
                         .UseServiceProvider(serviceProvider));
                     services.AddTransient<RealTimeActor>();
-
-                    services.AddSingleton((serviceProvider) => 
+                    services.AddSingleton<RealTimeProxy>((serviceProvider) => 
                     {
                         ActorSystem actorSystem = serviceProvider.GetService<ActorSystem>();
-                        return ClusterSharding.Get(actorSystem).Start("realTimeShard", actorSystem.DI().Props<RealTimeActor>(), ClusterShardingSettings.Create(actorSystem), new MessageExtractor());
+                        return new RealTimeProxy(ClusterSharding.Get(actorSystem).Start("realTimeShard", actorSystem.DI().Props<RealTimeActor>(), ClusterShardingSettings.Create(actorSystem), new Cluster.Messages.RealTime.MessageExtractor()));
                     });
                 });
     }

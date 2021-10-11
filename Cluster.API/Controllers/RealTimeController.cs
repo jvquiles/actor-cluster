@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Akka.Actor;
+using System.Collections.Generic;
+using Cluster.API.Hubs;
 using Cluster.API.Models;
 using Cluster.Messages.RealTime;
 using Cluster.Persistence;
@@ -17,15 +18,31 @@ namespace Cluster.API.Controllers
         private ILogger<RealTimeController> logger;
         private ICache<RealTime> cache;
         private IActorRef realTimeShard;
+        private CounterHub counterHub;
 
-        public RealTimeController(ILogger<RealTimeController> logger, ICache<RealTime> cache, IActorRef realTimeShard)
+        public RealTimeController(ILogger<RealTimeController> logger, ICache<RealTime> cache, RealTimeProxy realTimeProxy, CounterHub counterHub)
         {
             this.logger = logger;
             this.cache = cache;
-            this.realTimeShard = realTimeShard;
+            this.realTimeShard = realTimeProxy.ActorRef;
+            this.counterHub = counterHub;
         }
 
-        [HttpGet("/{key}")]
+        [HttpGet]
+        public IActionResult Get()
+        {
+            try
+            {
+                IEnumerable<string> keys = this.cache.GetKeys();
+                return Ok(keys);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest($"{ex}");
+            }   
+        }
+
+        [HttpGet("{key}")]
         public IActionResult Get(string key)
         {
             try
@@ -40,13 +57,27 @@ namespace Cluster.API.Controllers
             }   
         }
 
-        [HttpPut("/{key}")]
-        public async Task<IActionResult> Set(string key)
+        [HttpPut("{key}")]
+        public IActionResult Set(string key)
         {
             try
             {
-                IncrementResponse incrementResponse = await realTimeShard.Ask<IncrementResponse>(new IncrementRequest() { Key = key });
-                return Ok(incrementResponse);
+                this.realTimeShard.Tell(new IncrementRequest() { Key = key });
+                return Ok();
+            }
+            catch(Exception ex)
+            {
+                return BadRequest($"{ex}");
+            }   
+        }
+
+        [HttpPost("clear")]
+        public IActionResult Clear()
+        {
+            try
+            {
+                this.realTimeShard.Tell(new ClearRequest() { Key = $"{ new Random().Next(1000) }" });
+                return Ok();
             }
             catch(Exception ex)
             {
