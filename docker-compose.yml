@@ -1,12 +1,14 @@
 version: "3.7"
 services:
     redis:
+        container_name: redis
         image: redis:6.2.5
         ports:
             - 6379:6379
         networks:
             - back
     api:
+        container_name: api
         build:
             context: .
             dockerfile: Cluster.API/dockerfile
@@ -17,6 +19,7 @@ services:
         networks:
             - back
     web:
+        container_name: web
         build:
             context: ./Cluster-Web
             dockerfile: dockerfile
